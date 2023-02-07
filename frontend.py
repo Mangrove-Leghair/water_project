@@ -35,7 +35,7 @@ st.markdown(orignal_title, unsafe_allow_html=True)
 st.text("")
 
 custom_range = [back_date, present_date]
-st.markdown(custom_range)
+
 fig = px.area(df, x="DateTime", y="water_level", title='',markers=False)
 fig.update_layout(
     title={
