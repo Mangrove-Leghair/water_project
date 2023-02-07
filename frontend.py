@@ -16,7 +16,7 @@ supabaseList = supabase.table('Water Level').select('*').execute().data
 placeholder = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
 today = placeholder + \
         timedelta(hours = 1)
-present_date = placeholder.strftime("%Y-%m-%d %X")
+present_date = today.strftime("%Y-%m-%d %X")
 twodaysago = today - \
         timedelta(days = 2)
 back_date = twodaysago.strftime("%Y-%m-%d %X")
