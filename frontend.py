@@ -18,9 +18,15 @@ placeholder = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
 today = placeholder + \
         timedelta(hours = 1)
 present_date = today.strftime("%Y-%m-%d %X")
+present_date_wo_time = today.strftime("%Y-%m-%d")
 twodaysago = today - \
         timedelta(days = 2)
 back_date = twodaysago.strftime("%Y-%m-%d %X")
+
+thirtydaysago = today - \
+        timedelta(days = 31)
+thirtydate = thirtydaysago.strftime("%Y-%m-%d")
+
 custom_range = [back_date, present_date] # Setting time values for y axis to show the time period
 
 #initialize dataframe
@@ -32,7 +38,6 @@ for row in supabaseList:
     row["date"] = row["created_at"].split("T")[0]
     row["DateTime"] = row["created_at"]
     df = df.append(row, ignore_index=True)
-
 #creating local list
 
 #Display section
@@ -61,3 +66,22 @@ fig.add_hline(y=80, line_width=3, line_color="black",
 #Final Chart print
 st.plotly_chart(fig,use_container_width=True)
 
+
+
+# Save Data of last 30 days as CSV
+filename = datetime.now().strftime("%d_%m_%Y")
+mask = (df['date'] > thirtydate) & (df['date'] <= present_date_wo_time)
+df2 = df.loc[mask]
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')
+
+csv = convert_df(df2)
+
+st.download_button(
+    label="Download CSV",
+    data=csv,
+    file_name=f'{filename}.csv',
+    mime='text/csv',
+    help="Data of Last 30 Days as .csv file",
+)
