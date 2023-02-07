@@ -15,7 +15,7 @@ supabaseList = supabase.table('Water Level').select('*').execute().data
 # time range variables updation to put in x axis range parameters
 placeholder = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
 today = placeholder + \
-        timedelta(minutes = 30)
+        timedelta(hours = 1)
 present_date = placeholder.strftime("%Y-%m-%d %X")
 twodaysago = today - \
         timedelta(days = 2)
