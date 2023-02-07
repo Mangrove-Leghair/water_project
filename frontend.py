@@ -11,10 +11,10 @@ supabase = create_client(API_URL, API_KEY)
 supabaseList = supabase.table('Water Level').select('*').execute().data
 
 # time range variables updation to put in x axis range parameters
-today = datetime.now()
-today = today + \
+placeholder = datetime.now()
+today = placeholder + \
         timedelta(minutes = 30)
-present_date = today.strftime("%Y-%m-%d %X")
+present_date = placeholder.strftime("%Y-%m-%d %X")
 twodaysago = today - \
         timedelta(days = 2)
 back_date = twodaysago.strftime("%Y-%m-%d %X")
@@ -41,8 +41,8 @@ fig.update_layout(
         'x':0.5,
         'xanchor': 'center',
         'yanchor': 'top'})
-fig.update_layout(yaxis_range=[0,120])
-fig.update_layout(xaxis_range=custom_range)
+fig.update_layout(yaxis_range = [0,120])
+fig.update_layout(xaxis_range = custom_range)
 
 #Add Horizontal line in plotly chart for pump trigger level
 fig.add_hline(y=80, line_width=3, line_color="black",
