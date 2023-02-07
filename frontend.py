@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
 
 API_URL = 'https://tsaepqgxuguuoobkpivv.supabase.co'
 API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzYWVwcWd4dWd1dW9vYmtwaXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzU3NTgyNDMsImV4cCI6MTk5MTMzNDI0M30.vvY4PjW68WDYgKjrS3c2IXqP0IiXV1cAj7eGpgNkDLw'
@@ -11,8 +13,7 @@ supabase = create_client(API_URL, API_KEY)
 supabaseList = supabase.table('Water Level').select('*').execute().data
 
 # time range variables updation to put in x axis range parameters
-placeholder = datetime.now()
-st.markdown(placeholder)
+placeholder = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
 today = placeholder + \
         timedelta(minutes = 30)
 present_date = placeholder.strftime("%Y-%m-%d %X")
@@ -34,7 +35,7 @@ st.markdown(orignal_title, unsafe_allow_html=True)
 st.text("")
 
 custom_range = [back_date, present_date]
-st.markdown(custom_range)
+
 fig = px.area(df, x="DateTime", y="water_level", title='',markers=False)
 fig.update_layout(
     title={
