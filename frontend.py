@@ -12,6 +12,7 @@ supabaseList = supabase.table('Water Level').select('*').execute().data
 
 # time range variables updation to put in x axis range parameters
 placeholder = datetime.now()
+st.markdown(placeholder)
 today = placeholder + \
         timedelta(minutes = 30)
 present_date = placeholder.strftime("%Y-%m-%d %X")
@@ -33,6 +34,7 @@ st.markdown(orignal_title, unsafe_allow_html=True)
 st.text("")
 
 custom_range = [back_date, present_date]
+st.markdown(custom_range)
 fig = px.area(df, x="DateTime", y="water_level", title='',markers=False)
 fig.update_layout(
     title={
