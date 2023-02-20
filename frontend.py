@@ -5,12 +5,17 @@ import plotly.express as px
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-#API credentials
-API_URL = 'https://tsaepqgxuguuoobkpivv.supabase.co'
-API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzYWVwcWd4dWd1dW9vYmtwaXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzU3NTgyNDMsImV4cCI6MTk5MTMzNDI0M30.vvY4PjW68WDYgKjrS3c2IXqP0IiXV1cAj7eGpgNkDLw'
-supabase = create_client(API_URL, API_KEY)
+@st.cache_resource
+def init_connection():
+    #API credentials
+    API_URL = 'https://tsaepqgxuguuoobkpivv.supabase.co'
+    API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzYWVwcWd4dWd1dW9vYmtwaXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzU3NTgyNDMsImV4cCI6MTk5MTMzNDI0M30.vvY4PjW68WDYgKjrS3c2IXqP0IiXV1cAj7eGpgNkDLw'
+    return create_client(API_URL, API_KEY)
+supabase = init_connection()
+
 
 #Fetching data from supabase database
+#@st.cache_resource #Caching across all streamlit sessions
 supabaseList = supabase.table('Water Level').select('*').execute().data
 
 # time range variables updation to put in x axis range parameters
@@ -32,12 +37,18 @@ custom_range = [back_date, present_date] # Setting time values for y axis to sho
 #initialize dataframe
 df = pd.DataFrame()
 
-for row in supabaseList:
-    row["created_at"] = row["created_at"].split(".")[0]
-    row["time"] = row["created_at"].split("T")[1]
-    row["date"] = row["created_at"].split("T")[0]
-    row["DateTime"] = row["created_at"]
-    df = df.append(row, ignore_index=True)
+@st.cache_data(ttl=120)
+def datafr_creator():
+    global df
+    for row in supabaseList:
+        row["created_at"] = row["created_at"].split(".")[0]
+        row["time"] = row["created_at"].split("T")[1]
+        row["date"] = row["created_at"].split("T")[0]
+        row["DateTime"] = row["created_at"]
+        df = df.append(row, ignore_index=True)
+    return (df)
+
+datafr_creator()
 #creating local list
 
 #Display section
